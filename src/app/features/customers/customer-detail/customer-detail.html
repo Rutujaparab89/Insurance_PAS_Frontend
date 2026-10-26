@@ -1,0 +1,326 @@
+
+<div class="container-fluid py-4">
+
+  <!-- Page Header -->
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      aria-label="Back to customers"
+      (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <div>
+      <div class="text-primary fw-semibold small text-uppercase mb-1">
+        Customer Management
+      </div>
+      <h1 class="h3 fw-bold mb-0">Customer Details</h1>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="text-secondary mt-3">Loading customer details...</p>
+    </div>
+  } @else if (error) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-circle me-2"></i>
+      {{ error }}
+
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-danger ms-3"
+        (click)="goBack()">
+        Back to customers
+      </button>
+    </div>
+  } @else if (customer) {
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4">
+
+        <!-- Customer Header -->
+        <div class="d-flex flex-wrap align-items-center gap-3 pb-4 border-bottom">
+          <div
+            class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+            style="width: 64px; height: 64px; font-size: 1.5rem;">
+            <i class="bi bi-person"></i>
+          </div>
+
+          <div>
+            <h2 class="h4 fw-bold mb-1">{{ displayName }}</h2>
+            <div class="text-secondary">
+              Customer ID #{{ customer.id }}
+            </div>
+          </div>
+
+          <span
+            class="badge ms-auto"
+            [class.text-bg-success]="customer.status?.toUpperCase() === 'ACTIVE'"
+            [class.text-bg-secondary]="customer.status?.toUpperCase() !== 'ACTIVE'">
+            {{ customer.status || 'UNKNOWN' }}
+          </span>
+        </div>
+
+        <!-- Personal Information -->
+        <h3 class="h5 fw-bold mt-4 mb-3">Personal Information</h3>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Customer ID</div>
+            <div class="fw-semibold">{{ customer.id }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Customer Code</div>
+            <div class="fw-semibold">{{ customer.customerCode || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">First Name</div>
+            <div class="fw-semibold">{{ customer.firstName || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Middle Name</div>
+            <div class="fw-semibold">{{ customer.middleName || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Last Name</div>
+            <div class="fw-semibold">{{ customer.lastName || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Date of Birth</div>
+            <div class="fw-semibold">
+              {{ formatDate(customer.dateOfBirth) }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Gender</div>
+            <div class="fw-semibold">{{ customer.gender || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Marital Status</div>
+            <div class="fw-semibold">{{ customer.maritalStatus || '—' }}</div>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <h3 class="h5 fw-bold mt-4 mb-3 pt-3 border-top">
+          Contact Information
+        </h3>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Email Address</div>
+            <div class="fw-semibold">{{ customer.email || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Mobile Number</div>
+            <div class="fw-semibold">
+              {{ customer.mobileNumber || customer.mobile || '—' }}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Preferred Contact Mode</div>
+            <div class="fw-semibold">
+              {{ customer.preferredContactMode || '—' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Employment Information -->
+        <h3 class="h5 fw-bold mt-4 mb-3 pt-3 border-top">
+          Employment Information
+        </h3>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Employment Type</div>
+            <div class="fw-semibold">{{ customer.employmentType || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Employer Name</div>
+            <div class="fw-semibold">{{ customer.employerName || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Occupation</div>
+            <div class="fw-semibold">{{ customer.occupation || '—' }}</div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="text-secondary small mb-1">Annual Income</div>
+            <div class="fw-semibold">
+              @if (customer.annualIncome != null) {
+                {{ customer.annualIncome | currency:'INR':'symbol':'1.0-2' }}
+              } @else {
+                —
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Nominee Information -->
+        <h3 class="h5 fw-bold mt-4 mb-3 pt-3 border-top">
+          <i class="bi bi-people me-2"></i>
+          Nominee Information
+          <span class="badge text-bg-light ms-2">
+            {{ nominees.length }}
+          </span>
+        </h3>
+
+        @if (nomineesLoading) {
+          <div class="text-center py-3">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+            <span class="text-secondary ms-2">Loading nominees...</span>
+          </div>
+        } @else if (nomineesError) {
+          <div class="alert alert-warning" role="alert">
+            {{ nomineesError }}
+          </div>
+        } @else if (nominees.length === 0) {
+          <div class="text-secondary py-3">
+            <i class="bi bi-info-circle me-2"></i>
+            No nominee records available.
+          </div>
+        } @else {
+          <div class="row g-3">
+            @for (nominee of nominees; track nominee.nomineeId) {
+              <div class="col-md-6">
+                <div class="card h-100 border shadow-sm">
+                  <div class="card-body">
+                    <h4 class="h6 fw-bold mb-3">
+                      <i class="bi bi-person-badge me-2 text-primary"></i>
+                      {{ nomineeName(nominee) }}
+                    </h4>
+
+                    <div class="mb-2">
+                      <span class="text-secondary">Nominee ID:</span>
+                      <span class="fw-semibold">
+                        {{ nominee.nomineeId }}
+                      </span>
+                    </div>
+
+                    <div class="mb-2">
+                      <span class="text-secondary">Relationship:</span>
+                      <span class="fw-semibold">
+                        {{ nominee.relationship || '—' }}
+                      </span>
+                    </div>
+
+                    <div class="mb-2">
+                      <span class="text-secondary">Date of Birth:</span>
+                      {{ formatDate(nominee.dateOfBirth) }}
+                    </div>
+
+                    <div>
+                      <span class="text-secondary">Share Percentage:</span>
+                      <span class="fw-semibold">
+                        @if (nominee.sharePercentage != null) {
+                          {{ nominee.sharePercentage }}%
+                        } @else {
+                          —
+                        }
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Customer Documents -->
+        <h3 class="h5 fw-bold mt-4 mb-3 pt-3 border-top">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          Customer Documents
+          <span class="badge text-bg-light ms-2">
+            {{ documents.length }}
+          </span>
+        </h3>
+
+        @if (documentsLoading) {
+          <div class="text-center py-3">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+            <span class="text-secondary ms-2">Loading documents...</span>
+          </div>
+        } @else if (documentsError) {
+          <div class="alert alert-warning" role="alert">
+            {{ documentsError }}
+          </div>
+        } @else if (documents.length === 0) {
+          <div class="text-secondary py-3">
+            <i class="bi bi-info-circle me-2"></i>
+            No documents uploaded for this customer.
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Document ID</th>
+                  <th>Document Name</th>
+                  <th>Document Type</th>
+                  <th>Verification Status</th>
+                  <th>Uploaded Date</th>
+                  <th>File Path</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                @for (doc of documents; track doc.documentId) {
+                  <tr>
+                    <td>{{ doc.documentId }}</td>
+                    <td>{{ doc.fileName || '—' }}</td>
+                    <td>{{ doc.documentType || '—' }}</td>
+                    <td>
+                      <span
+                        class="badge"
+                        [class.text-bg-success]="doc.verificationStatus?.toUpperCase() === 'VERIFIED'"
+                        [class.text-bg-danger]="doc.verificationStatus?.toUpperCase() === 'REJECTED'"
+                        [class.text-bg-secondary]="!doc.verificationStatus || !['VERIFIED', 'REJECTED'].includes(doc.verificationStatus.toUpperCase())">
+                        {{ doc.verificationStatus || 'Pending' }}
+                      </span>
+                    </td>
+                    <td>{{ formatDate(doc.uploadedDate) }}</td>
+                    <td>
+                      <span
+                        class="text-secondary text-break"
+                        [title]="doc.filePath || ''">
+                        {{ doc.filePath || '—' }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+
+        <!-- Footer -->
+        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="goBack()">
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Customers
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+</div>

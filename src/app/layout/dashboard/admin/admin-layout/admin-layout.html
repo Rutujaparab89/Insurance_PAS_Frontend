@@ -1,0 +1,37 @@
+
+<div class="d-flex min-vh-100 bg-light">
+
+  <!-- Sidebar -->
+  <div
+    class="flex-shrink-0 bg-dark overflow-auto"
+    style="
+      width: 260px;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    ">
+
+    <app-admin-sidebar></app-admin-sidebar>
+
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1">
+
+    <!-- Topbar -->
+    <app-dashboard-topbar
+      role="Admin"
+      homeUrl="/admin/dashboard">
+    </app-dashboard-topbar>
+
+    <!-- Dashboard / Selected Module -->
+    <main class="container-fluid p-4">
+
+      <router-outlet></router-outlet>
+
+    </main>
+
+  </div>
+
+</div>
+

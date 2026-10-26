@@ -1,0 +1,22 @@
+
+<div class="d-flex min-vh-100 bg-light">
+
+  <div class="flex-shrink-0 overflow-auto"
+       style="width: 260px; height: 100vh; position: sticky; top: 0;">
+    <app-customer-sidebar></app-customer-sidebar>
+  </div>
+
+  <div class="flex-grow-1 min-w-0">
+
+    <app-dashboard-topbar
+      role="Customer"
+      homeUrl="/customer/dashboard">
+    </app-dashboard-topbar>
+
+    <main class="container-fluid p-4">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>

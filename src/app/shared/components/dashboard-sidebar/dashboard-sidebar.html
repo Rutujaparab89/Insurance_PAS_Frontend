@@ -1,0 +1,124 @@
+
+<aside class="bg-dark text-white d-flex flex-column min-vh-100">
+
+  <!-- Sidebar Header -->
+  <div class="p-4 border-bottom border-secondary">
+
+    <h5 class="mb-1 fw-bold">
+      <i class="bi bi-shield-check me-2"></i>
+      Insurance PAS
+    </h5>
+
+    <small class="text-white-50">
+      {{ title }}
+    </small>
+
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <nav class="p-3 flex-grow-1">
+
+    @for (item of menu; track item.label) {
+
+      <!-- Dashboard Link -->
+      @if (item.path) {
+
+        <a
+          [routerLink]="item.path"
+          routerLinkActive="bg-primary text-white"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="d-flex align-items-center gap-3
+                 text-white text-decoration-none
+                 rounded px-3 py-2 mb-2">
+
+          <i class="bi" [class]="item.icon"></i>
+
+          <span>{{ item.label }}</span>
+
+        </a>
+
+      }
+
+      <!-- Dropdown Section -->
+      @else if (item.children) {
+
+        <button
+          type="button"
+          class="btn text-white w-100 text-start
+                 d-flex align-items-center gap-3
+                 px-3 py-2 mb-2"
+          (click)="toggleMenu(item.label)"
+          [attr.aria-expanded]="openMenu === item.label">
+
+          <i class="bi" [class]="item.icon"></i>
+
+          <span class="flex-grow-1">
+            {{ item.label }}
+          </span>
+
+          <i class="bi"
+             [class.bi-chevron-up]="openMenu === item.label"
+             [class.bi-chevron-down]="openMenu !== item.label">
+          </i>
+
+        </button>
+
+        @if (openMenu === item.label) {
+
+          <div class="ps-4 mb-3">
+
+            @for (child of item.children; track child.label) {
+
+              @if (child.path) {
+                <a [routerLink]="child.path" routerLinkActive="text-white bg-secondary"
+                   class="d-block text-white-50 text-decoration-none rounded px-3 py-2 mb-1">{{ child.label }}</a>
+              } @else {
+                <span class="d-block text-white-50 rounded px-3 py-2 mb-1">{{ child.label }}</span>
+              }
+
+            }
+
+          </div>
+
+        }
+
+      }
+
+      <!-- Static Main Menu Item -->
+      @else {
+
+        <div
+          class="d-flex align-items-center gap-3
+                 text-white rounded px-3 py-2 mb-2">
+
+          <i class="bi" [class]="item.icon"></i>
+
+          <span>{{ item.label }}</span>
+
+        </div>
+
+      }
+
+    }
+
+    <!-- Logout -->
+    @if (showLogout) {
+
+      <button
+        type="button"
+        class="btn text-white w-100 text-start
+               d-flex align-items-center gap-3
+               px-3 py-2 mb-2"
+        (click)="logout()">
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        <span>Logout</span>
+
+      </button>
+
+    }
+
+  </nav>
+
+</aside>

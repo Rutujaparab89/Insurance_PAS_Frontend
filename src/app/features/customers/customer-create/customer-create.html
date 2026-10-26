@@ -1,0 +1,91 @@
+<div class="d-flex align-items-center gap-3 mb-4">
+  <a routerLink="/admin/customers" class="btn btn-outline-secondary" aria-label="Back to customers">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <div>
+    <div class="text-primary fw-semibold small text-uppercase mb-1">Customer management</div>
+    <h1 class="h3 fw-bold mb-0">Add Customer</h1>
+    <p class="text-secondary mb-0">Create a temporary customer login account using the Auth Service API.</p>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 1000px">
+  <div class="card-body p-4 p-lg-5">
+    <div class="alert alert-info" role="note">
+      <i class="bi bi-info-circle me-2"></i>
+      This creates login credentials only. The customer must log in and submit Customer Registration before their profile appears in the Admin and Agent Customer Lists.
+    </div>
+
+    @if (success) {
+      <div class="alert alert-success" role="status">
+        <div class="fw-semibold mb-1"><i class="bi bi-check-circle me-2"></i>Temporary login created</div>
+        <div>{{ success }}</div>
+        @if (createdEmail) {
+          <div class="mt-2"><strong>Login email:</strong> {{ createdEmail }}</div>
+        }
+      </div>
+    }
+
+    @if (error) {
+      <div class="alert alert-danger" role="alert">{{ error }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="username">Username</label>
+          <input id="username" class="form-control" formControlName="username" autocomplete="off"
+                 placeholder="e.g. Rutuja123"
+                 [class.is-invalid]="form.controls.username.touched && form.controls.username.invalid">
+          @if (form.controls.username.touched && form.controls.username.invalid) {
+            <div class="invalid-feedback">Use letters and numbers only, without spaces or special characters.</div>
+          }
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="email">Email address</label>
+          <input id="email" type="email" class="form-control" formControlName="email" autocomplete="email"
+                 placeholder="customer@example.com"
+                 [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid">
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <div class="invalid-feedback">Enter a valid email address.</div>
+          }
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="mobile">Mobile number</label>
+          <input id="mobile" type="tel" inputmode="numeric" class="form-control" formControlName="mobile"
+                 placeholder="10–20 digits"
+                 [class.is-invalid]="form.controls.mobile.touched && form.controls.mobile.invalid">
+          @if (form.controls.mobile.touched && form.controls.mobile.invalid) {
+            <div class="invalid-feedback">Enter 10 to 20 digits, without symbols.</div>
+          }
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="password">Temporary password</label>
+          <input id="password" type="password" class="form-control" formControlName="password"
+                 autocomplete="new-password" placeholder="At least 8 characters"
+                 [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid">
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <div class="invalid-feedback">Password must contain at least 8 characters.</div>
+          }
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-semibold" for="role">Role</label>
+          <input id="role" class="form-control" value="CUSTOMER" disabled>
+          <div class="form-text">New accounts created here are always customers.</div>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
+        <a routerLink="/admin/customers" class="btn btn-light border">Back to customer list</a>
+        <button class="btn btn-primary px-4" type="submit" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+          {{ loading ? 'Creating…' : 'Create Customer Login' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

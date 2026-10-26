@@ -1,0 +1,442 @@
+
+<div class="mb-4 d-flex align-items-start gap-3">
+  <a
+    routerLink="/customer/dashboard"
+    class="btn btn-outline-secondary"
+    aria-label="Back to dashboard">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+
+  <div>
+    <div class="text-primary fw-semibold small text-uppercase mb-1">
+      Customer Portal
+    </div>
+    <h1 class="h3 fw-bold mb-1">Customer Registration</h1>
+    <p class="text-secondary mb-0">
+      Complete customer, contact, occupation, address, nominee
+      and document details.
+    </p>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body p-4 p-lg-5">
+
+    @if (success) {
+      <div class="alert alert-success" role="status">
+        {{ success }}
+
+        @if (customerCode) {
+          Customer code: <strong>{{ customerCode }}</strong>
+        }
+      </div>
+    }
+
+    @if (error) {
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <!-- 1. Customer details -->
+      <h2 class="h5 fw-semibold mb-3">1. Customer details</h2>
+
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label" for="firstName">First name *</label>
+          <input id="firstName" class="form-control" formControlName="firstName">
+
+          @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+            <div class="text-danger small">First name is required.</div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="middleName">Middle name</label>
+          <input id="middleName" class="form-control" formControlName="middleName">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="lastName">Last name *</label>
+          <input id="lastName" class="form-control" formControlName="lastName">
+
+          @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+            <div class="text-danger small">Last name is required.</div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="dateOfBirth">Date of birth *</label>
+          <input
+            id="dateOfBirth"
+            type="date"
+            [max]="today"
+            class="form-control"
+            formControlName="dateOfBirth">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="gender">Gender *</label>
+          <select id="gender" class="form-select" formControlName="gender">
+            <option value="">Select gender</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="maritalStatus">Marital status *</label>
+          <select id="maritalStatus" class="form-select" formControlName="maritalStatus">
+            <option value="">Select status</option>
+            <option value="SINGLE">Single</option>
+            <option value="MARRIED">Married</option>
+            <option value="DIVORCED">Divorced</option>
+            <option value="WIDOWED">Widowed</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 2. Contact details -->
+      <h2 class="h5 fw-semibold mt-4 mb-3">2. Contact details</h2>
+
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label" for="mobileNumber">Mobile number *</label>
+          <input
+            id="mobileNumber"
+            type="tel"
+            maxlength="10"
+            class="form-control"
+            formControlName="mobileNumber"
+            placeholder="10 digits">
+
+          @if (form.controls.mobileNumber.touched && form.controls.mobileNumber.invalid) {
+            <div class="text-danger small">Enter exactly 10 digits.</div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="email">Email address *</label>
+          <input id="email" type="email" class="form-control" formControlName="email">
+
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <div class="text-danger small">Enter a valid email.</div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="preferredContactMode">
+            Preferred contact mode *
+          </label>
+          <select
+            id="preferredContactMode"
+            class="form-select"
+            formControlName="preferredContactMode">
+            <option value="">Select mode</option>
+
+            @for (mode of contactModes; track mode) {
+              <option [value]="mode">{{ mode }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- 3. Occupation details -->
+      <h2 class="h5 fw-semibold mt-4 mb-3">3. Occupation details</h2>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="occupation">Occupation *</label>
+          <select id="occupation" class="form-select" formControlName="occupation">
+            <option value="">Select occupation</option>
+
+            @for (occupation of occupations; track occupation) {
+              <option [value]="occupation">
+                {{ occupation.replaceAll('_', ' ') }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="employmentType">Employment type *</label>
+          <select id="employmentType" class="form-select" formControlName="employmentType">
+            <option value="">Select employment type</option>
+
+            @for (type of employmentTypes; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="employerName">Employer name</label>
+          <input id="employerName" class="form-control" formControlName="employerName">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="annualIncome">Annual income *</label>
+          <input
+            id="annualIncome"
+            type="number"
+            min="0"
+            step="0.01"
+            class="form-control"
+            formControlName="annualIncome">
+        </div>
+      </div>
+
+      <!-- 4. Address -->
+      <h2 class="h5 fw-semibold mt-4 mb-3">4. Address</h2>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="addressLine">Address line 1 *</label>
+          <input id="addressLine" class="form-control" formControlName="addressLine">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="addressLine2">Address line 2</label>
+          <input id="addressLine2" class="form-control" formControlName="addressLine2">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="city">City *</label>
+          <input id="city" class="form-control" formControlName="city">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="district">District *</label>
+          <input id="district" class="form-control" formControlName="district">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="state">State *</label>
+          <input id="state" class="form-control" formControlName="state">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="country">Country *</label>
+          <input id="country" class="form-control" formControlName="country">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="pincode">Pincode *</label>
+          <input
+            id="pincode"
+            class="form-control"
+            maxlength="10"
+            formControlName="pincode">
+
+          @if (form.controls.pincode.touched && form.controls.pincode.invalid) {
+            <div class="text-danger small">Use 5–10 digits.</div>
+          }
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="addressType">Address type *</label>
+          <select id="addressType" class="form-select" formControlName="addressType">
+            @for (type of addressTypes; track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- 5. Nominee details -->
+      <h2 class="h5 fw-semibold mt-4 mb-3">5. Nominee details</h2>
+
+      <div
+        class="alert"
+        [class.alert-success]="nomineeShareRemaining === 0"
+        [class.alert-warning]="nomineeShareRemaining !== 0">
+        Allocated:
+        <strong>{{ nomineeShareTotal | number:'1.0-2' }}%</strong>
+        · Remaining:
+        <strong>{{ nomineeShareRemaining | number:'1.0-2' }}%</strong>.
+        Total must equal 100%.
+      </div>
+
+      @for (nominee of nominees; track $index; let i = $index) {
+        <div class="border rounded p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="h6 mb-0">Nominee {{ i + 1 }}</h3>
+
+            @if (nominees.length > 1) {
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="removeNominee(i)">
+                Remove
+              </button>
+            }
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Nominee full name *</label>
+              <input
+                class="form-control"
+                [(ngModel)]="nominee.nomineeName"
+                [ngModelOptions]="{standalone:true}"
+                required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Relationship *</label>
+              <select
+                class="form-select"
+                [(ngModel)]="nominee.relationship"
+                [ngModelOptions]="{standalone:true}"
+                required>
+                <option value="">Select relationship</option>
+
+                @for (relation of nomineeRelationships; track relation) {
+                  <option [value]="relation">{{ relation }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Date of birth</label>
+              <input
+                type="date"
+                [max]="today"
+                class="form-control"
+                [(ngModel)]="nominee.dateOfBirth"
+                [ngModelOptions]="{standalone:true}">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Share percentage *</label>
+              <input
+                type="number"
+                min="0.01"
+                max="100"
+                step="0.01"
+                class="form-control"
+                [(ngModel)]="nominee.sharePercentage"
+                [ngModelOptions]="{standalone:true}"
+                required>
+            </div>
+          </div>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="addNominee()"
+        [disabled]="nominees.length >= 10 || nomineeShareRemaining <= 0">
+        <i class="bi bi-plus-circle me-1"></i>
+        Add one more nominee
+      </button>
+
+      <!-- 6. Multiple document uploads -->
+      <h2 class="h5 fw-semibold mt-4 mb-2">
+        6. Document upload
+        <span class="text-secondary fw-normal fs-6">(optional)</span>
+      </h2>
+
+      <p class="text-secondary small">
+        Supported documents: Aadhaar Card, Driving License, PAN Card
+        and Passport-size Photo. Accepted files: PDF, JPG, JPEG or PNG.
+        Maximum 5 MB per file. You can add up to 4 documents.
+      </p>
+
+      @for (doc of documentUploads; track $index; let i = $index) {
+        <div class="border rounded-3 p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="h6 fw-semibold mb-0">Document {{ i + 1 }}</h3>
+
+            @if (documentUploads.length > 1) {
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                [disabled]="loading"
+                (click)="removeDocument(i)">
+                <i class="bi bi-trash me-1"></i>
+                Remove
+              </button>
+            }
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label" [for]="'documentType' + i">
+                Document type
+              </label>
+
+              <select
+                class="form-select"
+                [id]="'documentType' + i"
+                [value]="doc.documentType"
+                [disabled]="loading"
+                (change)="onDocumentTypeChange(i, $event)">
+
+                @for (type of documentTypes; track type.value) {
+                  <option [value]="type.value">
+                    {{ type.label }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="col-md-7">
+              <label class="form-label" [for]="'documentFile' + i">
+                Choose file
+              </label>
+
+              <input
+                [id]="'documentFile' + i"
+                type="file"
+                class="form-control"
+                accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                [disabled]="loading"
+                (change)="onDocumentFileChange(i, $event)">
+
+              @if (doc.file) {
+                <div class="form-text">
+                  Selected: {{ doc.file.name }}
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="addDocument()"
+        [disabled]="loading || documentUploads.length >= maxDocuments">
+        <i class="bi bi-plus-circle me-1"></i>
+        Add one more document
+      </button>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a
+          routerLink="/customer/dashboard"
+          class="btn btn-light border">
+          Cancel
+        </a>
+
+        <button
+          class="btn btn-primary px-4"
+          type="submit"
+          [disabled]="loading">
+
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm me-2"></span>
+          }
+
+          {{ loading ? 'Submitting…' : 'Submit Registration' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,215 @@
+
+<main class="login-shell">
+  <section
+    class="login-visual"
+    aria-label="Insurance Policy Administration System"
+  >
+    <div class="brand-lockup">
+      <span class="brand-mark">
+        <i class="bi bi-shield-check"></i>
+      </span>
+      <span>
+        Insurance<span class="brand-light">PAS</span>
+      </span>
+    </div>
+
+    <div class="visual-copy">
+      <span class="eyebrow">
+        INSURANCE POLICY ADMINISTRATION
+      </span>
+
+      <h1>
+        Protection starts<br />
+        <em>with confidence.</em>
+      </h1>
+
+      <p>
+        One secure workspace for policies, customers, claims
+        and the people who protect them.
+      </p>
+
+      <div class="visual-points">
+        <div>
+          <i class="bi bi-check-circle-fill"></i>
+          Secure role-based access
+        </div>
+
+        <div>
+          <i class="bi bi-check-circle-fill"></i>
+          Your work, all in one place
+        </div>
+      </div>
+    </div>
+
+    <div class="visual-footer">
+      <span>INSURANCE PAS</span>
+      <span>SECURE PORTAL · v1.0</span>
+    </div>
+  </section>
+
+  <section class="login-panel">
+    <div class="mobile-brand">
+      <span class="brand-mark">
+        <i class="bi bi-shield-check"></i>
+      </span>
+      Insurance<span class="brand-light">PAS</span>
+    </div>
+
+    <div class="login-card">
+      <div class="welcome-icon">
+        <i class="bi bi-person-lock"></i>
+      </div>
+
+      <p class="section-kicker">WELCOME BACK</p>
+
+      <h2>Sign in to your account</h2>
+
+      <p class="subtitle">
+        Enter your credentials to continue to your workspace.
+      </p>
+
+      <div
+        class="alert alert-danger error-alert"
+        role="alert"
+        *ngIf="errorMessage"
+      >
+        <i class="bi bi-exclamation-circle me-2"></i>
+        {{ errorMessage }}
+      </div>
+
+      <form
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+        novalidate
+      >
+        <div class="field-group">
+          <label for="username">Username</label>
+
+          <div
+            class="input-wrap"
+            [class.invalid]="
+              form.controls.username.touched &&
+              form.controls.username.invalid
+            "
+          >
+            <i class="bi bi-person"></i>
+
+            <input
+              id="username"
+              type="email"
+              formControlName="username"
+              placeholder="Enter your email address"
+              autocomplete="username"
+              autofocus
+            />
+          </div>
+
+          <small
+            class="field-error"
+            *ngIf="
+              form.controls.username.touched &&
+              form.controls.username.hasError('required')
+            "
+          >
+            This field is required.
+          </small>
+
+          <small
+            class="field-error"
+            *ngIf="
+              form.controls.username.touched &&
+              form.controls.username.hasError('email')
+            "
+          >
+            Enter a valid email address.
+          </small>
+        </div>
+
+        <div class="field-group">
+          <div class="label-row">
+            <label for="password">Password</label>
+
+            <!-- <a routerLink="/change-password" class="forgot-link">
+              Change password?
+            </a> -->
+          </div>
+
+          <div
+            class="input-wrap"
+            [class.invalid]="
+              form.controls.password.touched &&
+              form.controls.password.invalid
+            "
+          >
+            <i class="bi bi-lock"></i>
+
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+
+            <button
+              class="password-toggle"
+              type="button"
+              (click)="showPassword = !showPassword"
+              [attr.aria-label]="
+                showPassword ? 'Hide password' : 'Show password'
+              "
+            >
+              <i
+                class="bi"
+                [class.bi-eye]="!showPassword"
+                [class.bi-eye-slash]="showPassword"
+              ></i>
+            </button>
+          </div>
+
+          <small
+            class="field-error"
+            *ngIf="
+              form.controls.password.touched &&
+              form.controls.password.hasError('required')
+            "
+          >
+            Password is required.
+          </small>
+        </div>
+
+        <button
+          class="sign-in-button"
+          type="submit"
+          [disabled]="loading"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm me-2"
+            aria-hidden="true"
+          ></span>
+
+          {{ loading ? 'Signing in…' : 'Sign in' }}
+
+          <i
+            *ngIf="!loading"
+            class="bi bi-arrow-right"
+          ></i>
+        </button>
+      </form>
+
+      <div class="security-note">
+        <i class="bi bi-shield-lock"></i>
+        <span>
+          Your session is protected with secure authentication.
+        </span>
+      </div>
+    </div>
+
+    <footer class="panel-footer">
+      © 2026 Insurance PAS
+      <span>·</span>
+      For authorised users only
+    </footer>
+  </section>
+</main>
